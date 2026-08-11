@@ -134,7 +134,7 @@ static void Set_INPUT(uint8_t pin)
  Called By:
  Input:				无
  Output:			无
- Return:			0: 有应答
+ Return:			0: 有应答 
  	 	 	 	 	1: 无应答
  Others:			无
 *******************************************************/
@@ -150,7 +150,7 @@ static uint8_t DeviceReset(uint8_t pin)
 	delay_us(100);		//释放总线后100us读应答
 
 	Set_INPUT(pin);
-	if(0 == ReadBit(pin))
+	if(0 == ReadBit(pin))  //从机的下降沿
 	{
 		delay_us(500);	//tRSTH在标准速度下最小应为480μs
 //		xTaskResumeAll();
