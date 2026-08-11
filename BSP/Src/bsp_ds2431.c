@@ -627,7 +627,7 @@ uint8_t DS2431_Write_Line(uint8_t pin, uint8_t nLine, uint8_t *DataBuff)
 	DeviceWrite_Byte(pin, TA1);
 	DeviceWrite_Byte(pin, TA2);
 	DeviceWrite_Byte(pin, E_S);
-	delay_ms(15);					//等待tPROGmax 完成复制操作
+	Sys_Delay(15);					//等待tPROGmax 完成复制操作
 	if(DeviceRead_Byte(pin) != 0xAA)//读复制状态，AAh = 成功
 	{
 		return (3);

@@ -17,6 +17,7 @@
 
 
 
+void DWT_Init(void);
 void delay_us(uint32_t us);
 void Sys_Delay(uint16_t time_ms);
 

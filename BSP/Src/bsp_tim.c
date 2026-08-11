@@ -7,9 +7,9 @@
 
 
 // DWT 初始化函数
-void DWT_Init(void)
+void  DWT_Init(void)
 {
-    // 使能 TRC (Trace) 模块
+    // 使能 TRC (Trace) 模块 追踪
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
     // 清零 DWT 周期计数器
     DWT->CYCCNT = 0;
@@ -24,10 +24,9 @@ void DWT_Init(void)
 void delay_us(uint32_t us)
 {
     uint32_t start_cycles = DWT->CYCCNT;
-    // 100MHz 下，1us 对应 100 个 CPU 周期
-    uint32_t delay_cycles = us * 100; 
+    uint64_t delay_cycles = ((uint64_t)SystemCoreClock * us) / 1000000U;
 
-    while ((DWT->CYCCNT - start_cycles) < delay_cycles)
+    while ((uint32_t)(DWT->CYCCNT - start_cycles) < delay_cycles)
     {
         // 等待 CPU 时钟周期达到要求
     }
