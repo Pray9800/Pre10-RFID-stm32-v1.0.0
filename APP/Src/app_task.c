@@ -2,6 +2,8 @@
 #include "bsp_rc522.h"
 #include "bsp_tim.h"
 #include "bsp_ds2431.h"
+#include "bsp_usart.h"
+
 uint8_t rc522_ready = 0;
 uint8_t version = 0;
 
@@ -23,20 +25,21 @@ void task()
 {
         task_init(); //初始化
         //
-        if(DS2431_ReadID(D0, r_DeviceID) == 0)  // 返回0=成功
+        while(1)
         {
-            // 设备连接，读数据
-            DS2431_Read_Page(D0, 1, r_EEPROM);
-            HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
-            HAL_Delay(100);
-            HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
-            HAL_Delay(100);
-             
+            if(DS2431_ReadID(D0, r_DeviceID) == 0)  // 返回0=成功
+            {
+                // 设备连接，读数据
+                DS2431_Read_Page(D0, 1, r_EEPROM);
+                HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
+                HAL_Delay(100);
+                HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
+                HAL_Delay(100);      
+                MCU_485_Send(r_EEPROM,8);           
+            } 
+      
         }
-  
-
-        
-           HAL_Delay(100);
+      
 
 }
 

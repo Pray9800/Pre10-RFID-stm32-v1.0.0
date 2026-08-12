@@ -16,6 +16,12 @@
                 {
                     "imageFileName": "${command:st-stm32-ide-debug-launch.get-projects-binary-from-context1}"
                 }
+            ],
+            // 新增 告诉 GDB 输出格式默认为 16 进制
+            "initCommands": [
+                "set output-radix 16",
+                "set print elements 0",
+                "set print array-indexes on"
             ]
         },
         {
