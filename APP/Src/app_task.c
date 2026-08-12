@@ -22,6 +22,7 @@ void task_init()
 void task()
 {
         task_init(); //初始化
+        //
         if(DS2431_ReadID(D0, r_DeviceID) == 0)  // 返回0=成功
         {
             // 设备连接，读数据
