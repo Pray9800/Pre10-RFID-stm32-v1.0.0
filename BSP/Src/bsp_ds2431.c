@@ -86,7 +86,7 @@ static void Set_OUTPUT(uint8_t pin)
 		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-		HAL_GPIO_Init(D0_GPIO_Port, &GPIO_InitStruct);
+		HAL_GPIO_Init(D1_GPIO_Port, &GPIO_InitStruct);
 		// 默认设置为高电平（释放总线）
 		HAL_GPIO_WritePin(D1_GPIO_Port, D1_Pin, GPIO_PIN_SET);
     }

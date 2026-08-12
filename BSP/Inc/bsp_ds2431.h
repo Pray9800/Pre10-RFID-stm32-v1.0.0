@@ -35,6 +35,10 @@ extern uint8_t w_Line[8];
                   	  	}while(0)
 
 
+
+ 				
+
+
 /*DS2431 ROM功能命令*/
 #define Rom_Read_Cmd            0x33    //Read ROM
 #define Rom_Match_Cmd           0x55    //Match ROM
@@ -57,5 +61,10 @@ uint8_t DS2431_Write_Line(uint8_t pin, uint8_t nLine, uint8_t *DataBuff);
 uint8_t DS2431_Write_Page(uint8_t pin, uint8_t nPage, uint8_t *DataBuff);
 uint8_t DS2431_WriteAllPage(uint8_t pin, uint8_t * buffer);
 
+
+
+
+extern uint8_t r_DeviceID[8];//外部调用
+extern uint8_t r_EEPROM[144];//外部调用
 
 #endif /* INC_BSP_DS2431_H_ */
