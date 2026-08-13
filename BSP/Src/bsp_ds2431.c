@@ -537,6 +537,10 @@ uint8_t DS2431_Read_EntireEEPROM(uint8_t pin, uint8_t *DataBuff)
  Author: PENG		Version: V1.0		Date:2025/06/26
  Function:			DS2431_Write_Line
  Description:		写D2431的数据存储器的某一行 一行总共8个字节
+					Page1, Line0 = nLine 4
+					Page1, Line1 = nLine 5
+					Page1, Line2 = nLine 6
+					Page1, Line3 = nLine 7
  Calls:
  Called By:
  Input:				nLine: 要写哪一行，取值范围(0-17)，其中16行为特殊功能寄存器，17行为保留

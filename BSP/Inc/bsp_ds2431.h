@@ -3,6 +3,12 @@
  File name:			bsp_ds2431.h
  Author: PENG		Version: V1.0		Date:2025/06/26
  Description:    	DS2431配置头文件
+					DS2431 存储结构
+					├── Page 0 (地址 0x00-0x1F)   32字节 = 4行
+					├── Page 1 (地址 0x20-0x3F)   32字节 = 4行
+					├── Page 2 (地址 0x40-0x5F)   32字节 = 4行
+					└── Page 3 (地址 0x60-0x7F)   32字节 = 4行
+						└── 特殊功能寄存器 (最后16字节)
  Function List:
  History:
 *******************************************************/

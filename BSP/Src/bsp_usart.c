@@ -92,7 +92,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         UART2_Rxbuff[rx_cnt] = rx_temp;
         rx_cnt++;
 
-        if (rx_cnt >= 7)
+        if (rx_cnt >= 10)
         {
             if (UART2_Rxbuff[1] == 0x06)
             {
