@@ -52,6 +52,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
    ${CMAKE_CURRENT_SOURCE_DIR}/BSP/Src/bsp_ds2431.c
    ${CMAKE_CURRENT_SOURCE_DIR}/BSP/Src/bsp_usart.c
    ${CMAKE_CURRENT_SOURCE_DIR}/BSP/Src/bsp_crc.c
+   ${CMAKE_CURRENT_SOURCE_DIR}/BSP/Src/bsp_iqr.c
 
 )
 

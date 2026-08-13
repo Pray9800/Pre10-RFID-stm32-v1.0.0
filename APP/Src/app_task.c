@@ -12,6 +12,7 @@ void task_init()
     DWT_Init();
     rc522_ready = BSP_RC522_IsDeviceReady();
     version = BSP_RC522_ReadReg(0x37);
+    
     //onewire模式下单线测试
     DS2431_Init(D0);
     DS2431_ReadID(D0, r_DeviceID);

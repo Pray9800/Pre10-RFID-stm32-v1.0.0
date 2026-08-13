@@ -61,6 +61,7 @@ void Error_Handler(void);
 #define RS485_DE_GPIO_Port GPIOA
 #define IQR_Pin GPIO_PIN_0
 #define IQR_GPIO_Port GPIOB
+#define IQR_EXTI_IRQn EXTI0_IRQn
 #define D1_Pin GPIO_PIN_11
 #define D1_GPIO_Port GPIOA
 #define D0_Pin GPIO_PIN_12

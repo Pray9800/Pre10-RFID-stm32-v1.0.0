@@ -112,6 +112,12 @@
 #define MFRC_NOTAGERR               (char)(-1)
 #define MFRC_ERR                    (char)(-2)
 
+/* CommIrqReg 位掩码定义 */
+/* Rx interrupt (RxIRq) - 数据接收完成 / 寻卡完成标志，位5 */
+#define MFRC_RxIRq                  (0x20U)
+/* 写入 CommIrqReg 清除中断标志的掩码（只保留保守位） */
+#define MFRC_CommIrqClear           (0x7FU)
+
 
 
 
