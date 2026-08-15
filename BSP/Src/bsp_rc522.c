@@ -600,3 +600,125 @@ char PCD_ReadBlock(uint8_t BlockAddr, uint8_t *pData)
     return status;
 }
 
+
+
+/*******************************************************
+ Author: PAN        Version: V1.0       Date:2026/08/16
+ Function:          PCD_WriteBlock
+ Description:       写MF1卡数据块
+                    Mifare1卡片每个块16字节
+                    写入前必须先认证（PCD_AuthState）
+                    写操作分两步：1.发送写命令 2.发送数据
+
+ 写块流程：
+ ┌────────────────────────────────────────────────────┐
+ │ 1. 发送写命令                                      │
+ │    命令: WRITE(0xA0) + BlockAddr + CRC             │
+ │    长度: 4字节                                     │
+ │    应答: ACK (0x0A, 4位)                           │
+ │                                                    │
+ │ 2. 发送数据                                        │
+ │    数据: 16字节 + CRC                              │
+ │    长度: 18字节                                    │
+ │    应答: ACK (0x0A, 4位)                           │
+ └────────────────────────────────────────────────────┘
+
+ Calls:             RC522_CmdFrame、RC522_CalulateCRC
+ Called By:         上层应用
+ Input:             BlockAddr: 块地址（0~63）
+                    pData: 待写入的数据,16字节
+ Output:            无
+ Return:            status: 错误代码(MFRC_OK、MFRC_ERR)
+ Others:            ACK = 0x0A（4位应答，表示确认）
+*******************************************************/
+char PCD_WriteBlock(uint8_t BlockAddr, uint8_t *pData)
+{
+    char status;
+    uint16_t unLen;
+    uint8_t i, CmdFrameBuf[MFRC_MAXRLEN];
+
+    /* Step 1: 发送写命令 */
+    CmdFrameBuf[0] = PICC_WRITE;      // 0xA0：写块命令
+    CmdFrameBuf[1] = BlockAddr;       // 块地址
+
+    // 计算CRC校验
+    RC522_CalulateCRC(CmdFrameBuf, 2, &CmdFrameBuf[2]);
+
+    // 发送4字节命令
+    status = RC522_CmdFrame(MFRC_TRANSCEIVE, CmdFrameBuf, 4, CmdFrameBuf, &unLen);
+
+    // 验证应答：ACK = 0x0A（4位）
+    // unLen == 4：应答4位
+    // (CmdFrameBuf[0] & 0x0F) == 0x0A：低4位为0x0A表示ACK
+    if((status != MFRC_OK) || (unLen != 4) || ((CmdFrameBuf[0] & 0x0F) != 0x0A))
+    {
+        status = MFRC_ERR;  // 写命令失败
+    }
+
+    /* Step 2: 发送数据 */
+    if(status == MFRC_OK)
+    {
+        // 填充16字节数据
+        for(i=0; i<16; i++)
+        {
+            CmdFrameBuf[i] = *(pData+i);
+        }
+
+        // 计算CRC校验（16字节数据 + 2字节CRC = 18字节）
+        RC522_CalulateCRC(CmdFrameBuf, 16, &CmdFrameBuf[16]);
+
+        // 发送18字节数据
+        status = RC522_CmdFrame(MFRC_TRANSCEIVE, CmdFrameBuf, 18, CmdFrameBuf, &unLen);
+
+        // 验证应答：ACK = 0x0A（4位）
+        if((status != MFRC_OK) || (unLen != 4) || ((CmdFrameBuf[0] & 0x0F) != 0x0A))
+        {
+            status = MFRC_ERR;  // 写数据失败
+        }
+    }
+
+    return status;
+}
+
+
+
+/*******************************************************
+ Author: PAN        Version: V1.0       Date:2026/08/16
+ Function:          PCD_Halt
+ Description:       命令卡片进入休眠状态
+                    休眠后卡片不再响应寻卡命令
+                    如需再次读取，需要重新寻卡（REQALL 0x52）
+
+ 休眠命令帧：
+ ┌──────┬──────┬──────┬──────┐
+ │ 0x50 │ 0x00 │ CRCL │ CRCH │
+ ├──────┼──────┼──────┼──────┤
+ │ HALT │  0   │ CRC校验 │
+ └──────┴──────┴──────┴──────┘
+
+ Calls:             RC522_CmdFrame、RC522_CalulateCRC
+ Called By:         上层应用
+ Input:             无
+ Output:            无
+ Return:            status: 错误代码(MFRC_OK、MFRC_ERR)
+ Others:            休眠后卡片不响应REQA(0x26)，只响应WUPA(0x52)
+*******************************************************/
+char PCD_Halt(void)
+{
+    char status;
+    uint16_t unLen;
+    uint8_t CmdFrameBuf[MFRC_MAXRLEN];
+
+    // 构造休眠命令帧
+    CmdFrameBuf[0] = PICC_HALT;      // 0x50：休眠命令
+    CmdFrameBuf[1] = 0x00;            // 固定为0
+
+    // 计算CRC校验
+    RC522_CalulateCRC(CmdFrameBuf, 2, &CmdFrameBuf[2]);
+
+    // 发送4字节命令（不需要等待应答）
+    status = RC522_CmdFrame(MFRC_TRANSCEIVE, CmdFrameBuf, 4, CmdFrameBuf, &unLen);
+
+    return status;
+}
+

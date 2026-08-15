@@ -183,5 +183,7 @@ char PCD_Anticoll(uint8_t *pSnr);
 char PCD_Select(uint8_t *pSnr);
 char PCD_AuthState(uint8_t AuthMode, uint8_t BlockAddr, uint8_t *pKey, uint8_t *pSnr);
 char PCD_ReadBlock(uint8_t BlockAddr, uint8_t *pData);
+char PCD_WriteBlock(uint8_t BlockAddr, uint8_t *pData);
+char PCD_Halt(void);
 
 #endif /* __BSP_RC522_H */
