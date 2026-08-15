@@ -5,9 +5,9 @@
 #ifndef __BSP_RC522_H
 #define __BSP_RC522_H
 
+#include "main.h"
 #include "bsp_i2c.h"
-
-
+#include "bsp_tim.h"
 
 
 
@@ -122,6 +122,33 @@
 
 
 
+/********************************************************
+*				MFRC552与MF1卡通讯接口程序	 		     	*
+********************************************************/
+/* Mifare1卡片命令字 */
+#define PICC_REQIDL           	0x26		//寻天线区内未进入休眠状态的卡
+#define PICC_REQALL           	0x52		//寻天线区内全部卡
+#define PICC_ANTICOLL1        	0x93		//防冲撞
+#define PICC_ANTICOLL2        	0x95		//防冲撞
+#define PICC_AUTHENT1A        	0x60		//验证A密钥
+#define PICC_AUTHENT1B        	0x61		//验证B密钥
+#define PICC_READ             	0x30		//读块
+#define PICC_WRITE            	0xA0		//写块
+#define PICC_DECREMENT        	0xC0		//减值(扣除)
+#define PICC_INCREMENT        	0xC1		//增值(充值)
+#define PICC_TRANSFER         	0xB0		//转存(传送)
+#define PICC_RESTORE          	0xC2		//恢复(重储)
+#define PICC_HALT             	0x50		//休眠
+
+
+
+
+/* PCD通讯时返回的错误代码 */
+#define PCD_OK                 	(char)0		//成功
+#define PCD_NOTAGERR            (char)(-1)	//无卡
+#define PCD_ERR                	(char)(-2)	//出错
+
+
 /* RC522 IRQ 中断引脚定义 */
 #define RC522_IRQ_PIN          GPIO_PIN_0
 #define RC522_IRQ_PORT         GPIOB
@@ -132,6 +159,29 @@ uint8_t BSP_RC522_ReadReg(uint8_t reg_addr);
 HAL_StatusTypeDef BSP_RC522_WriteBuffer(uint8_t reg_addr, uint8_t *pData, uint16_t size);
 HAL_StatusTypeDef BSP_RC522_ReadBuffer(uint8_t reg_addr, uint8_t *pData, uint16_t size);
 uint8_t BSP_RC522_ReadIRQPin(void);
-void BSP_RC522_Init(void);
+
+/* 底层位操作函数 */
+void RC522_ClrBitMask(uint8_t addr, uint8_t mask);
+void RC522_SetBitMask(uint8_t addr, uint8_t mask);
+
+/* CRC计算函数 */
+void RC522_CalulateCRC(uint8_t *pInData, uint8_t len, uint8_t *pOutData);
+
+/* 天线控制函数 */
+void PCD_AntennaOn(void);
+void PCD_AntennaOff(void);
+
+/* 命令帧函数 */
+char RC522_CmdFrame(uint8_t cmd, uint8_t *pInData, uint8_t InLenByte, uint8_t *pOutData, uint16_t *pOutLenBit);
+
+/* 初始化函数 */
+void RFID_RC522_Init(void);
+
+/* ISO14443A协议函数 */
+char PCD_Request(uint8_t RequestMode, uint8_t *pCardType);
+char PCD_Anticoll(uint8_t *pSnr);
+char PCD_Select(uint8_t *pSnr);
+char PCD_AuthState(uint8_t AuthMode, uint8_t BlockAddr, uint8_t *pKey, uint8_t *pSnr);
+char PCD_ReadBlock(uint8_t BlockAddr, uint8_t *pData);
 
 #endif /* __BSP_RC522_H */
